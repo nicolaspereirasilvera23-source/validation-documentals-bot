@@ -23,7 +23,7 @@ import webbrowser
 from datetime import date, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 from carnes_deportista import (
     ConsultaError,
@@ -53,9 +53,15 @@ BLOQUEO = threading.Lock()
 class Manejador(BaseHTTPRequestHandler):
     server_version = "CarnesSND/1.0"
 
+    def _ruta_solicitada(self) -> str:
+        """Recupera la ruta original conservada por el rewrite de Vercel."""
+        parseada = urlparse(self.path)
+        original = parse_qs(parseada.query).get("__original_path", [None])[0]
+        return unquote(original if original is not None else parseada.path)
+
     # ----------------------------- GET ---------------------------------- #
     def do_GET(self) -> None:  # noqa: N802 (API de BaseHTTPRequestHandler)
-        ruta = unquote(urlparse(self.path).path)
+        ruta = self._ruta_solicitada()
         if ruta in ("/", "/index.html"):
             self._servir_estatico("index.html")
         elif ruta == "/api/salud":
@@ -65,7 +71,7 @@ class Manejador(BaseHTTPRequestHandler):
 
     # ----------------------------- POST --------------------------------- #
     def do_POST(self) -> None:  # noqa: N802
-        ruta = urlparse(self.path).path
+        ruta = self._ruta_solicitada()
         if ruta != "/api/consulta":
             self._responder_json(404, {"error": "Ruta no encontrada."})
             return
