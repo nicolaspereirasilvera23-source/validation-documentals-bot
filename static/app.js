@@ -17,6 +17,7 @@ const barraAcciones = document.getElementById('barra-acciones');
 const botonDescargar = document.getElementById('descargar');
 const notaDescarga = document.getElementById('nota-descarga');
 const tplVacio = document.getElementById('tpl-vacio');
+const aceptarTerminos = document.getElementById('aceptar-terminos');
 
 const CLAVES = { dias: 'carnes.dias' };
 const CLASES_ESTADO = {
@@ -293,6 +294,12 @@ function bloquear(activo) {
 async function consultar(evento) {
   evento.preventDefault();
 
+  if (!aceptarTerminos.checked) {
+    mostrarEstado('Leé y aceptá las condiciones antes de consultar.', 'error');
+    aceptarTerminos.focus();
+    return;
+  }
+
   const texto = area.value.trim();
   if (!texto) {
     mostrarEstado('Ingresá al menos una cédula para consultar.', 'error');
@@ -386,6 +393,9 @@ function descargarCSV() {
 /* --------------------------------- Init ---------------------------------- */
 
 form.addEventListener('submit', consultar);
+aceptarTerminos.addEventListener('change', () => {
+  if (aceptarTerminos.checked) mostrarEstado('');
+});
 botonLimpiar.addEventListener('click', limpiarTodo);
 botonDescargar.addEventListener('click', descargarCSV);
 

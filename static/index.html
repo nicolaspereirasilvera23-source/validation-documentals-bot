@@ -27,6 +27,17 @@
     <section class="panel" aria-labelledby="titulo-formulario">
       <h2 class="oculto" id="titulo-formulario">Datos de la consulta</h2>
 
+      <section class="terminos" aria-labelledby="titulo-terminos">
+        <h2 id="titulo-terminos">Antes de consultar</h2>
+        <p>Esta herramienta transmite las cédulas ingresadas al servicio oficial únicamente para consultar el Carné del Deportista. No crea una base de datos ni conserva las cédulas en el navegador, archivos o logs propios. La respuesta se muestra mientras esta página permanezca abierta. Si descargás un CSV, el archivo queda bajo tu custodia.</p>
+        <p>El delegado del equipo debe consultar solo cuando tenga autorización y una finalidad legítima, informar a las personas involucradas cuando corresponda y proteger cualquier resultado que descargue. La aceptación de estas condiciones no sustituye el consentimiento o la base legal que corresponda para tratar datos de terceros, ni elimina las obligaciones legales aplicables.</p>
+        <p>La infraestructura de alojamiento y el servicio oficial pueden procesar datos técnicos conforme a sus políticas. La herramienta no registra la aceptación. Consultá la <a href="https://www.impo.com.uy/bases/leyes/18331-2008?verreferencias=norma" target="_blank" rel="noopener">Ley 18.331 de Protección de Datos Personales</a> y la información de la <a href="https://www.gub.uy/unidad-reguladora-control-datos-personales/" target="_blank" rel="noopener">URCDP</a>.</p>
+        <label class="terminos__aceptacion" for="aceptar-terminos">
+          <input id="aceptar-terminos" type="checkbox">
+          <span>Leí y acepto estas condiciones de uso. Confirmo que, como delegado, verificaré la autorización y el propósito de cada consulta, y cuidaré o borraré los archivos que descargue.</span>
+        </label>
+      </section>
+
       <form id="form" novalidate>
         <div class="campo">
           <label for="cedulas">Cédulas de identidad</label>
