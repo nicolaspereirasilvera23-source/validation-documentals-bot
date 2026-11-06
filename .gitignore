@@ -1,0 +1,12 @@
+# Consultas locales: contienen cédulas y datos personales
+cedulas.txt
+resultados.csv
+resultados.json
+*.csv
+*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

@@ -1,0 +1,755 @@
+/* ==========================================================================
+   Carné del Deportista · interfaz de consulta
+   ========================================================================== */
+
+:root {
+  --azul-900: #0b2645;
+  --azul-800: #123d6b;
+  --azul-600: #1d5b9e;
+  --azul-100: #e6eef8;
+
+  --tinta: #16202b;
+  --tinta-suave: #5b6b7c;
+  --linea: #dce4ee;
+  --fondo: #eef3f9;
+  --blanco: #ffffff;
+
+  --verde: #126943;
+  --verde-bg: #e2f4ea;
+  --ambar: #8a5a00;
+  --ambar-bg: #fdf0d2;
+  --rojo: #a3231b;
+  --rojo-bg: #fbe6e4;
+  --gris-estado: #4b5a68;
+  --gris-bg: #edf1f5;
+
+  --radio: 16px;
+  --radio-chico: 12px;
+  --sombra: 0 20px 45px -28px rgba(11, 38, 69, 0.5);
+  --sombra-suave: 0 8px 24px -18px rgba(11, 38, 69, 0.55);
+
+  --fuente: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --mono: "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--fuente);
+  color: var(--tinta);
+  background:
+    radial-gradient(900px 420px at 85% -10%, rgba(29, 91, 158, 0.14), transparent 70%),
+    var(--fondo);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
+
+a {
+  color: var(--azul-600);
+}
+
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.contenedor {
+  width: min(100% - 2.5rem, 880px);
+  margin-inline: auto;
+}
+
+/* ------------------------------- Cabecera ------------------------------- */
+
+.cabecera {
+  background:
+    radial-gradient(520px 260px at 88% 10%, rgba(255, 255, 255, 0.14), transparent 65%),
+    linear-gradient(135deg, var(--azul-900), var(--azul-800) 55%, #17477c);
+  color: #fff;
+  padding: 1.9rem 0 4.6rem;
+}
+
+.cabecera__interior {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.76rem;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.marca__sigla {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+
+.marca__texto {
+  text-transform: uppercase;
+}
+
+.cabecera h1 {
+  font-size: clamp(1.55rem, 1.1rem + 1.6vw, 2.1rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+.cabecera p {
+  margin-top: 0.35rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.98rem;
+}
+
+/* -------------------------------- Panel --------------------------------- */
+
+main {
+  flex: 1;
+  padding-bottom: 3rem;
+}
+
+.panel {
+  margin-top: -2.9rem;
+  background: var(--blanco);
+  border: 1px solid rgba(220, 228, 238, 0.9);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.6rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.campo > label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+textarea {
+  width: 100%;
+  min-height: 7.2rem;
+  padding: 0.85rem 1rem;
+  resize: vertical;
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-chico);
+  background: #fbfcfe;
+  color: var(--tinta);
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1.65;
+  letter-spacing: 0.04em;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+textarea::placeholder {
+  color: #9aa8b6;
+  letter-spacing: 0.04em;
+}
+
+textarea:hover {
+  border-color: #c3d1e2;
+}
+
+textarea:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--azul-600);
+  box-shadow: 0 0 0 4px rgba(29, 91, 158, 0.14);
+}
+
+.ayuda {
+  font-size: 0.83rem;
+  color: var(--tinta-suave);
+}
+
+.fila {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.15rem;
+  flex-wrap: wrap;
+}
+
+.campo-numero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.campo-numero__control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  text-transform: none;
+  font-weight: 400;
+  color: var(--tinta-suave);
+  letter-spacing: 0;
+  font-size: 0.9rem;
+}
+
+.campo-numero input {
+  width: 5.2rem;
+  padding: 0.62rem 0.7rem;
+  border: 1.5px solid var(--linea);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--tinta);
+  background: #fbfcfe;
+  text-align: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo-numero input:focus {
+  outline: none;
+  border-color: var(--azul-600);
+  box-shadow: 0 0 0 4px rgba(29, 91, 158, 0.14);
+}
+
+.acciones {
+  display: flex;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+
+/* -------------------------------- Botones ------------------------------- */
+
+.boton {
+  --alto: 2.85rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--alto);
+  padding: 0 1.25rem;
+  border: 1.5px solid transparent;
+  border-radius: var(--radio-chico);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease, transform 0.08s ease;
+}
+
+.boton:active {
+  transform: translateY(1px);
+}
+
+.boton:focus-visible {
+  outline: 3px solid rgba(29, 91, 158, 0.35);
+  outline-offset: 2px;
+}
+
+.boton--primario {
+  min-width: 8.6rem;
+  color: #fff;
+  background: linear-gradient(180deg, #1e5f9f, var(--azul-800));
+  box-shadow: 0 10px 22px -14px rgba(18, 61, 107, 0.9);
+}
+
+.boton--primario:hover {
+  background: linear-gradient(180deg, #2368ab, #154676);
+}
+
+.boton--primario[disabled] {
+  cursor: progress;
+  opacity: 0.85;
+}
+
+.boton--fantasma {
+  color: var(--azul-800);
+  background: #fff;
+  border-color: var(--linea);
+}
+
+.boton--fantasma:hover {
+  border-color: #bfd0e3;
+  background: #f7fafd;
+}
+
+.boton--secundario {
+  color: var(--azul-800);
+  background: var(--blanco);
+  border-color: #c6d5e6;
+  box-shadow: var(--sombra-suave);
+}
+
+.boton--secundario:hover {
+  border-color: var(--azul-600);
+  background: #f6fafe;
+}
+
+/* Spinner del botón */
+
+.boton__spinner {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: girar 0.7s linear infinite;
+}
+
+.boton--cargando .boton__spinner {
+  display: inline-block;
+}
+
+.boton--cargando {
+  cursor: progress;
+  opacity: 0.9;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+/* ------------------------------ Estado petición ------------------------- */
+
+.estado-peticion {
+  min-height: 1.25rem;
+  margin-top: 0.85rem;
+  font-size: 0.88rem;
+  color: var(--tinta-suave);
+}
+
+.estado-peticion:empty {
+  margin-top: 0;
+  min-height: 0;
+}
+
+.estado-peticion--error {
+  color: var(--rojo);
+  font-weight: 600;
+}
+
+.estado-peticion--ok {
+  color: var(--verde);
+}
+
+/* -------------------------------- Resumen ------------------------------- */
+
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+}
+
+.dato {
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-chico);
+  padding: 0.75rem 0.9rem;
+  box-shadow: var(--sombra-suave);
+}
+
+.dato__valor {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.dato__etiqueta {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.dato--verde .dato__valor { color: var(--verde); }
+.dato--ambar .dato__valor { color: var(--ambar); }
+.dato--rojo .dato__valor { color: var(--rojo); }
+.dato--gris .dato__valor { color: var(--gris-estado); }
+
+/* ------------------------------- Resultados ----------------------------- */
+
+.resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.15rem;
+}
+
+.persona {
+  background: var(--blanco);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra-suave);
+  animation: aparecer 0.25s ease both;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.persona__cabecera {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.7rem;
+  padding: 0.95rem 1.2rem;
+  background: #f7fafd;
+  border-bottom: 1px solid var(--linea);
+}
+
+.persona__nombre {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--azul-900);
+}
+
+.persona__cedula {
+  margin-left: auto;
+  padding: 0.14rem 0.6rem;
+  border-radius: 999px;
+  background: var(--azul-100);
+  color: var(--azul-800);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.carnes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carne {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding: 1rem 1.2rem;
+  flex-wrap: wrap;
+}
+
+.carne + .carne {
+  border-top: 1px dashed var(--linea);
+}
+
+.carne__deporte {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--azul-600);
+}
+
+.carne__fechas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+}
+
+.carne__fechas .etiqueta {
+  color: var(--tinta-suave);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 0.15rem;
+}
+
+.carne__estado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  text-align: right;
+}
+
+.carne__dias {
+  font-size: 0.8rem;
+  color: var(--tinta-suave);
+}
+
+.insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.insignia::before {
+  content: "";
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.insignia--en-fecha { color: var(--verde); background: var(--verde-bg); }
+.insignia--pronto { color: var(--ambar); background: var(--ambar-bg); }
+.insignia--vencido { color: var(--rojo); background: var(--rojo-bg); }
+.insignia--sin-fecha { color: var(--gris-estado); background: var(--gris-bg); }
+
+/* -------------------------------- Mensajes ------------------------------ */
+
+.mensajes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1.15rem;
+}
+
+.aviso {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radio-chico);
+  border: 1px solid var(--linea);
+  background: var(--blanco);
+  font-size: 0.9rem;
+  box-shadow: var(--sombra-suave);
+}
+
+.aviso--alerta {
+  border-color: #f0cf9e;
+  background: #fffaf0;
+  color: #6d4b08;
+}
+
+.aviso--error {
+  border-color: #f0c4bf;
+  background: #fff6f5;
+  color: #8a1f18;
+}
+
+.aviso__icono {
+  flex: none;
+  width: 1.35rem;
+  height: 1.35rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ambar);
+}
+
+.aviso--error .aviso__icono {
+  background: var(--rojo);
+}
+
+.aviso__titulo {
+  font-weight: 700;
+}
+
+.aviso ul {
+  margin: 0.3rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.aviso li {
+  margin-top: 0.1rem;
+}
+
+.aviso li span {
+  color: var(--tinta-suave);
+}
+
+/* ------------------------------ Vacío / CSV ----------------------------- */
+
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1.6rem;
+  padding: 2.4rem 1.5rem;
+  border: 1.5px dashed #ccd8e6;
+  border-radius: var(--radio);
+  background: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  color: #7a8a99;
+}
+
+.vacio svg {
+  color: #93a4b5;
+  margin-bottom: 0.25rem;
+}
+
+.vacio__titulo {
+  font-weight: 700;
+  color: var(--tinta-suave);
+}
+
+.vacio__texto {
+  font-size: 0.88rem;
+}
+
+.barra-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.15rem;
+}
+
+.barra-acciones__nota {
+  font-size: 0.8rem;
+  color: var(--tinta-suave);
+}
+
+/* ---------------------------------- Pie --------------------------------- */
+
+.pie {
+  padding: 1.4rem 0 2rem;
+  font-size: 0.82rem;
+  color: var(--tinta-suave);
+  border-top: 1px solid var(--linea);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.pie a {
+  text-decoration: none;
+  border-bottom: 1px solid rgba(29, 91, 158, 0.35);
+}
+
+.pie a:hover {
+  border-bottom-color: var(--azul-600);
+}
+
+/* ------------------------------- Responsive ----------------------------- */
+
+@media (max-width: 620px) {
+  .contenedor {
+    width: min(100% - 1.6rem, 880px);
+  }
+
+  .cabecera {
+    padding-top: 1.4rem;
+    padding-bottom: 4rem;
+  }
+
+  .panel {
+    margin-top: -2.6rem;
+    padding: 1.15rem;
+  }
+
+  .fila {
+    align-items: stretch;
+  }
+
+  .acciones {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .acciones .boton {
+    flex: 1;
+  }
+
+  .carne {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .carne__estado {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .persona__cedula {
+    margin-left: 0;
+  }
+
+  .barra-acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .barra-acciones .boton {
+    width: 100%;
+  }
+
+  .barra-acciones__nota {
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

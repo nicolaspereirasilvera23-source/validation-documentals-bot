@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carné del Deportista · Consulta</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <header class="cabecera">
+    <div class="contenedor cabecera__interior">
+      <div class="marca" aria-hidden="true">
+        <span class="marca__sigla">SND</span>
+        <span class="marca__texto">Secretaría Nacional<br>del Deporte</span>
+      </div>
+      <div class="cabecera__titulo">
+        <h1>Consulta de Carné del Deportista</h1>
+        <p>Verificá el estado de uno o varios carnés en segundos.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="contenedor">
+
+    <section class="panel" aria-labelledby="titulo-formulario">
+      <h2 class="oculto" id="titulo-formulario">Datos de la consulta</h2>
+
+      <form id="form" novalidate>
+        <div class="campo">
+          <label for="cedulas">Cédulas de identidad</label>
+          <textarea
+            id="cedulas"
+            name="cedulas"
+            rows="4"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="55541330&#10;4.123.456-7"></textarea>
+          <p class="ayuda">Una por línea, o separadas por coma o espacio. Se aceptan puntos y guiones.</p>
+        </div>
+
+        <div class="fila">
+          <label class="campo-numero" for="dias">
+            Aviso de vencimiento
+            <span class="campo-numero__control">
+              <input type="number" id="dias" name="dias" min="0" max="365" step="1" value="30" inputmode="numeric">
+              <span>días</span>
+            </span>
+          </label>
+
+          <div class="acciones">
+            <button type="button" class="boton boton--fantasma" id="limpiar">Limpiar</button>
+            <button type="submit" class="boton boton--primario" id="consultar">
+              <span class="boton__spinner" aria-hidden="true"></span>
+              <span class="boton__texto">Consultar</span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <p class="estado-peticion" id="estado-peticion" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="resumen" class="resumen" aria-label="Resumen de la consulta" hidden></section>
+
+    <section id="mensajes" class="mensajes" aria-live="polite" hidden></section>
+
+    <section id="resultados" class="resultados" aria-live="polite"></section>
+
+    <div class="barra-acciones" id="barra-acciones" hidden>
+      <button type="button" class="boton boton--secundario" id="descargar">Descargar CSV</button>
+      <span class="barra-acciones__nota" id="nota-descarga"></span>
+    </div>
+
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <p>
+        Consulta local · Datos oficiales de
+        <a href="https://aps.deporte.gub.uy/ConsultaCarneDeportista/" target="_blank" rel="noopener">aps.deporte.gub.uy</a>
+      </p>
+    </div>
+  </footer>
+
+  <template id="tpl-vacio">
+    <div class="vacio">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>
+        <circle cx="8" cy="11" r="2.2"/>
+        <path d="M4.8 16.2c.6-1.5 1.8-2.3 3.2-2.3s2.6.8 3.2 2.3"/>
+        <path d="M14 9.5h4M14 13h4"/>
+      </svg>
+      <p class="vacio__titulo">Todavía no hay resultados</p>
+      <p class="vacio__texto">Ingresá una o varias cédulas y presioná <strong>Consultar</strong>.</p>
+    </div>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
