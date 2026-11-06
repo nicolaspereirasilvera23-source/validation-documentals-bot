@@ -101,6 +101,10 @@ class Manejador(BaseHTTPRequestHandler):
 
         self._responder_json(200, respuesta)
 
+    # Vercel enruta las peticiones a la misma clase de handler.
+    def do_HEAD(self) -> None:  # noqa: N802
+        self.do_GET()
+
     # --------------------------- auxiliares ----------------------------- #
     def _servir_estatico(self, ruta_relativa: str) -> None:
         destino = (ESTATICOS / ruta_relativa).resolve()
