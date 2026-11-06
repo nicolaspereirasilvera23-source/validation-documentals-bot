@@ -18,7 +18,7 @@ const botonDescargar = document.getElementById('descargar');
 const notaDescarga = document.getElementById('nota-descarga');
 const tplVacio = document.getElementById('tpl-vacio');
 
-const CLAVES = { cedulas: 'carnes.cedulas', dias: 'carnes.dias' };
+const CLAVES = { dias: 'carnes.dias' };
 const CLASES_ESTADO = {
   'En fecha': 'en-fecha',
   'Pronto a vencer': 'pronto',
@@ -68,7 +68,6 @@ function mostrarEstado(texto, tipo = '') {
 
 function guardarPreferencias() {
   try {
-    localStorage.setItem(CLAVES.cedulas, area.value);
     localStorage.setItem(CLAVES.dias, diasInput.value);
   } catch (_) {
     /* almacenamiento no disponible (modo privado) */
@@ -77,8 +76,8 @@ function guardarPreferencias() {
 
 function restaurarPreferencias() {
   try {
-    const cedulas = localStorage.getItem(CLAVES.cedulas);
-    if (cedulas) area.value = cedulas;
+    // Borra cédulas guardadas por versiones anteriores de la interfaz.
+    localStorage.removeItem('carnes.cedulas');
     const dias = localStorage.getItem(CLAVES.dias);
     if (dias !== null && dias !== '') diasInput.value = dias;
   } catch (_) {
@@ -338,11 +337,6 @@ function limpiarTodo() {
   barraAcciones.hidden = true;
   ultimaRespuesta = null;
   mostrarEstado('');
-  try {
-    localStorage.removeItem(CLAVES.cedulas);
-  } catch (_) {
-    /* sin almacenamiento */
-  }
   area.focus();
 }
 

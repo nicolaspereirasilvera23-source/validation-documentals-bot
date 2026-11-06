@@ -34,7 +34,7 @@ cédulas, ver el resultado en tarjetas con el estado de cada carné y descargar 
 
 - `Ctrl+Enter` dentro del cuadro de texto consulta sin usar el mouse.
 - El umbral de "pronto a vencer" se ajusta desde la misma pantalla.
-- Las cédulas y el umbral quedan guardados en el navegador (`localStorage`).
+- Las cédulas se mantienen solo en memoria en la página y no se guardan en `localStorage` ni en logs propios. El umbral sí se recuerda en el navegador.
 - No requiere dependencias extra: usa el servidor HTTP estándar de Python.
 
 Opciones del servidor:

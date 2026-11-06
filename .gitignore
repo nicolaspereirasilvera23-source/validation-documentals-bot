@@ -10,3 +10,6 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# Configuración de despliegue (un ignore global puede excluir archivos Vercel)
+!/vercel.json
