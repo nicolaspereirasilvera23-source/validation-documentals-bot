@@ -11,4 +11,5 @@ from servidor import Manejador  # noqa: E402
 
 # El runtime Python de Vercel busca una subclase BaseHTTPRequestHandler
 # exportada con el nombre exacto `handler`.
-handler = Manejador
+class handler(Manejador):
+    """Entrypoint reconocido por el runtime Python de Vercel."""
