@@ -15,8 +15,7 @@ Ejemplos
 --------
     python carnes_deportista.py 55541330
     python carnes_deportista.py 55541330 12345678 4.123.456-7
-    python carnes_deportista.py --archivo cedulas.txt --csv salida.csv
-    python carnes_deportista.py --archivo cedulas.txt --json salida.json --sin-tabla
+    python carnes_deportista.py --archivo cedulas.txt
 
 Sin argumentos abre un modo interactivo para pegar cédulas una por una.
 """
@@ -24,8 +23,6 @@ Sin argumentos abre un modo interactivo para pegar cédulas una por una.
 from __future__ import annotations
 
 import argparse
-import csv
-import json
 import re
 import sys
 import time
@@ -424,35 +421,6 @@ def imprimir_tabla(
     print()
 
 
-def escribir_csv(ruta: Path, carnes: list[Carne], separador: str) -> None:
-    columnas = ["cedula", "nombre", "deporte", "desde", "hasta", "dias_restantes", "estado"]
-    with ruta.open("w", encoding="utf-8-sig", newline="") as archivo:
-        escritor = csv.DictWriter(archivo, fieldnames=columnas, delimiter=separador)
-        escritor.writeheader()
-        for carne in carnes:
-            fila = carne.a_dict()
-            escritor.writerow({columna: fila[columna] for columna in columnas})
-
-
-def escribir_json(
-    ruta: Path,
-    carnes: list[Carne],
-    sin_resultados: list[tuple[str, str]],
-    errores: list[ErrorConsulta],
-    hoy: date,
-    dias_aviso: int,
-) -> None:
-    datos = {
-        "consultado": datetime.now().isoformat(timespec="seconds"),
-        "fecha_calculo": hoy.isoformat(),
-        "dias_aviso": dias_aviso,
-        "resultados": [carne.a_dict() for carne in carnes],
-        "sin_resultados": [{"cedula": cedula, "mensaje": mensaje} for cedula, mensaje in sin_resultados],
-        "errores": [asdict(error) for error in errores],
-    }
-    ruta.write_text(json.dumps(datos, ensure_ascii=False, indent=2), encoding="utf-8")
-
-
 # --------------------------------------------------------------------------- #
 # CLI
 # --------------------------------------------------------------------------- #
@@ -464,7 +432,7 @@ def parsear_argumentos(argv: list[str] | None = None) -> argparse.Namespace:
             "Ejemplos:\n"
             "  python carnes_deportista.py 55541330\n"
             "  python carnes_deportista.py 55541330 12345678\n"
-            "  python carnes_deportista.py --archivo cedulas.txt --csv salida.csv\n"
+            "  python carnes_deportista.py --archivo cedulas.txt\n"
         ),
     )
     parser.add_argument("cedulas", nargs="*", help="Cédulas (se aceptan puntos y guiones; se limpian).")
@@ -483,9 +451,6 @@ def parsear_argumentos(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--espera", type=float, default=0.6, help="Segundos entre consultas (por defecto: 0.6).")
     parser.add_argument("-t", "--timeout", type=float, default=30.0, help="Timeout HTTP en segundos (por defecto: 30).")
     parser.add_argument("--reintentos", type=int, default=3, help="Reintentos ante errores de red/HTTP (por defecto: 3).")
-    parser.add_argument("-c", "--csv", help="Guardar resultados en un CSV.")
-    parser.add_argument("-j", "--json", help="Guardar resultados en un JSON.")
-    parser.add_argument("--separador", default=";", help="Separador del CSV (por defecto: ';').")
     parser.add_argument("--sin-tabla", action="store_true", help="No mostrar la tabla por pantalla.")
     parser.add_argument("--sin-color", action="store_true", help="Desactivar colores ANSI.")
     parser.add_argument("-v", "--verbose", action="store_true", help="Mostrar progreso de cada consulta.")
@@ -568,15 +533,9 @@ def main(argv: list[str] | None = None) -> int:
     if not argumentos.sin_tabla:
         imprimir_tabla(carnes, sin_resultados, errores, hoy, argumentos.dias_aviso)
 
-    if argumentos.csv:
-        escribir_csv(Path(argumentos.csv), carnes, argumentos.separador)
-        print(f"CSV guardado en: {argumentos.csv}")
-    if argumentos.json:
-        escribir_json(Path(argumentos.json), carnes, sin_resultados, errores, hoy, argumentos.dias_aviso)
-        print(f"JSON guardado en: {argumentos.json}")
-
     return 1 if errores else 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
+

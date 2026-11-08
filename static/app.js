@@ -13,13 +13,18 @@ const estadoPeticion = document.getElementById('estado-peticion');
 const resumen = document.getElementById('resumen');
 const mensajes = document.getElementById('mensajes');
 const resultados = document.getElementById('resultados');
-const barraAcciones = document.getElementById('barra-acciones');
-const botonDescargar = document.getElementById('descargar');
-const notaDescarga = document.getElementById('nota-descarga');
+
+
+
 const tplVacio = document.getElementById('tpl-vacio');
 const aceptarTerminos = document.getElementById('aceptar-terminos');
+const condiciones = document.getElementById('condiciones');
+const confirmarTerminos = document.getElementById('confirmar-terminos');
+const sistema = document.getElementById('sistema');
+let condicionesAceptadas = false;
+let consultaActiva = null;
 
-const CLAVES = { dias: 'carnes.dias' };
+
 const CLASES_ESTADO = {
   'En fecha': 'en-fecha',
   'Pronto a vencer': 'pronto',
@@ -27,7 +32,7 @@ const CLASES_ESTADO = {
   'Sin fecha': 'sin-fecha',
 };
 
-let ultimaRespuesta = null;
+
 
 /* ------------------------------- Utilidades ------------------------------ */
 
@@ -65,25 +70,6 @@ function textoDias(carne) {
 function mostrarEstado(texto, tipo = '') {
   estadoPeticion.textContent = texto;
   estadoPeticion.className = 'estado-peticion' + (tipo ? ` estado-peticion--${tipo}` : '');
-}
-
-function guardarPreferencias() {
-  try {
-    localStorage.setItem(CLAVES.dias, diasInput.value);
-  } catch (_) {
-    /* almacenamiento no disponible (modo privado) */
-  }
-}
-
-function restaurarPreferencias() {
-  try {
-    // Borra cédulas guardadas por versiones anteriores de la interfaz.
-    localStorage.removeItem('carnes.cedulas');
-    const dias = localStorage.getItem(CLAVES.dias);
-    if (dias !== null && dias !== '') diasInput.value = dias;
-  } catch (_) {
-    /* sin almacenamiento */
-  }
 }
 
 /* ------------------------------- Render ---------------------------------- */
@@ -265,15 +251,12 @@ function renderResultados(carnes) {
 }
 
 function render(datos) {
-  ultimaRespuesta = datos;
   renderResumen(datos);
   renderMensajes(datos);
   renderResultados(datos.resultados || []);
 
   const total = (datos.resultados || []).length;
-  barraAcciones.hidden = total === 0;
   if (total) {
-    notaDescarga.textContent = `${total} carné${total === 1 ? '' : 's'} · ${datos.consultado}`;
     mostrarEstado(
       `Consultado el ${datos.consultado} · criterio de aviso ≤ ${datos.dias_aviso} días`,
       'ok'
@@ -294,7 +277,8 @@ function bloquear(activo) {
 async function consultar(evento) {
   evento.preventDefault();
 
-  if (!aceptarTerminos.checked) {
+  if (consultaActiva) return;
+  if (!condicionesAceptadas) {
     mostrarEstado('Leé y aceptá las condiciones antes de consultar.', 'error');
     aceptarTerminos.focus();
     return;
@@ -307,14 +291,17 @@ async function consultar(evento) {
     return;
   }
 
-  guardarPreferencias();
   const cantidad = contarCedulas(texto);
   bloquear(true);
   mostrarEstado(`Consultando ${cantidad} cédula${cantidad === 1 ? '' : 's'}…`);
 
+  const controlador = new AbortController();
+  consultaActiva = controlador;
   try {
     const respuesta = await fetch('/api/consulta', {
       method: 'POST',
+      cache: 'no-store',
+      signal: controlador.signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         cedulas: texto,
@@ -326,78 +313,45 @@ async function consultar(evento) {
     if (!respuesta.ok) {
       throw new Error(datos.error || `El servidor respondió HTTP ${respuesta.status}.`);
     }
+    if (controlador.signal.aborted) return;
+    area.value = '';
     render(datos);
   } catch (error) {
+    if (controlador.signal.aborted) return;
     mostrarEstado(`No se pudo completar la consulta: ${error.message}`, 'error');
   } finally {
+    if (consultaActiva === controlador) consultaActiva = null;
     bloquear(false);
   }
 }
 
 function limpiarTodo() {
+  if (consultaActiva) consultaActiva.abort();
   area.value = '';
   resultados.replaceChildren(tplVacio.content.cloneNode(true));
   mensajes.replaceChildren();
   mensajes.hidden = true;
   resumen.replaceChildren();
   resumen.hidden = true;
-  barraAcciones.hidden = true;
-  ultimaRespuesta = null;
   mostrarEstado('');
   area.focus();
-}
-
-function campoCSV(valor) {
-  const texto = valor === null || valor === undefined ? '' : String(valor);
-  return /[";\r\n]/.test(texto) ? `"${texto.replace(/"/g, '""')}"` : texto;
-}
-
-function descargarCSV() {
-  const carnes = (ultimaRespuesta && ultimaRespuesta.resultados) || [];
-  if (!carnes.length) return;
-
-  const columnas = ['cedula', 'nombre', 'deporte', 'desde', 'hasta', 'dias_restantes', 'estado'];
-  const filas = [columnas];
-  for (const carne of carnes) {
-    filas.push([
-      carne.cedula,
-      carne.nombre,
-      carne.deporte,
-      carne.desde || '',
-      carne.hasta || '',
-      carne.dias_restantes ?? '',
-      carne.estado,
-    ]);
-  }
-
-  const contenido =
-    '\uFEFF' + filas.map((fila) => fila.map(campoCSV).join(';')).join('\r\n');
-
-  const ahora = new Date();
-  const sello = [
-    ahora.getFullYear(),
-    String(ahora.getMonth() + 1).padStart(2, '0'),
-    String(ahora.getDate()).padStart(2, '0'),
-  ].join('');
-
-  const enlace = document.createElement('a');
-  const url = URL.createObjectURL(new Blob([contenido], { type: 'text/csv;charset=utf-8;' }));
-  enlace.href = url;
-  enlace.download = `carnes_${sello}.csv`;
-  document.body.append(enlace);
-  enlace.click();
-  enlace.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 /* --------------------------------- Init ---------------------------------- */
 
 form.addEventListener('submit', consultar);
 aceptarTerminos.addEventListener('change', () => {
-  if (aceptarTerminos.checked) mostrarEstado('');
+  confirmarTerminos.disabled = !aceptarTerminos.checked;
 });
 botonLimpiar.addEventListener('click', limpiarTodo);
-botonDescargar.addEventListener('click', descargarCSV);
+confirmarTerminos.addEventListener('click', () => {
+  if (!aceptarTerminos.checked) return;
+  condicionesAceptadas = true;
+  condiciones.close();
+  sistema.inert = false;
+  area.focus();
+});
+condiciones.addEventListener('cancel', (evento) => evento.preventDefault());
 
 area.addEventListener('keydown', (evento) => {
   if ((evento.ctrlKey || evento.metaKey) && evento.key === 'Enter') {
@@ -406,5 +360,27 @@ area.addEventListener('keydown', (evento) => {
   }
 });
 
-restaurarPreferencias();
+// Elimina preferencias y cédulas que pudieran conservar versiones anteriores.
+try {
+  localStorage.removeItem('carnes.cedulas');
+  localStorage.removeItem('carnes.dias');
+} catch (_) { /* almacenamiento no disponible */ }
+function pedirAceptacion() {
+  condicionesAceptadas = false;
+  aceptarTerminos.checked = false;
+  confirmarTerminos.disabled = true;
+  sistema.inert = true;
+  if (condiciones.open) condiciones.close();
+  condiciones.showModal();
+}
+window.addEventListener('pagehide', () => {
+  limpiarTodo();
+  diasInput.value = '30';
+  condicionesAceptadas = false;
+});
+window.addEventListener('pageshow', (evento) => {
+  if (evento.persisted) pedirAceptacion();
+});
+pedirAceptacion();
 resultados.replaceChildren(tplVacio.content.cloneNode(true));
+

@@ -804,3 +804,29 @@ textarea:focus {
     transition-duration: 0.001ms !important;
   }
 }
+
+
+
+/* Condiciones obligatorias, superpuestas al sistema. */
+dialog.terminos {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(640px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: clamp(20px, 4vw, 36px);
+  background: #fff;
+  color: #1e293b;
+  box-shadow: 0 24px 80px rgb(15 23 42 / 30%);
+}
+dialog.terminos::backdrop {
+  background: rgb(15 23 42 / 65%);
+  backdrop-filter: blur(5px);
+}
+body:has(dialog[open]) { overflow: hidden; }
+#confirmar-terminos { margin-top: 20px; width: 100%; }
+#confirmar-terminos:disabled { opacity: .45; cursor: not-allowed; }

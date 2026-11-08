@@ -9,6 +9,20 @@
 </head>
 <body>
 
+      <dialog id="condiciones" class="terminos" aria-labelledby="titulo-terminos" aria-describedby="descripcion-terminos">
+        <h2 id="titulo-terminos">Antes de consultar</h2>
+        <p id="descripcion-terminos">Esta herramienta transmite las cédulas ingresadas al servicio oficial únicamente para consultar el Carné del Deportista. No crea una base de datos ni conserva las cédulas en el navegador, archivos o logs propios. La respuesta se muestra mientras esta página permanezca abierta.</p>
+        <p>El delegado del equipo debe consultar solo cuando tenga autorización y una finalidad legítima e informar a las personas involucradas cuando corresponda. La aceptación de estas condiciones no sustituye el consentimiento o la base legal que corresponda para tratar datos de terceros, ni elimina las obligaciones legales aplicables.</p>
+        <p>La infraestructura de alojamiento y el servicio oficial pueden procesar datos técnicos conforme a sus políticas. La herramienta no registra la aceptación. Consultá la <a href="https://www.impo.com.uy/bases/leyes/18331-2008?verreferencias=norma" target="_blank" rel="noopener">Ley 18.331 de Protección de Datos Personales</a> y la información de la <a href="https://www.gub.uy/unidad-reguladora-control-datos-personales/" target="_blank" rel="noopener">URCDP</a>.</p>
+        <label class="terminos__aceptacion" for="aceptar-terminos">
+          <input id="aceptar-terminos" type="checkbox">
+          <span>Leí y acepto estas condiciones de uso. Confirmo que, como delegado, verificaré la autorización y el propósito de cada consulta.</span>
+        </label>
+        <button type="button" class="boton boton--primario" id="confirmar-terminos" disabled>Confirmar y continuar</button>
+      </dialog>
+
+
+  <div id="sistema" inert>
   <header class="cabecera">
     <div class="contenedor cabecera__interior">
       <div class="marca" aria-hidden="true">
@@ -26,17 +40,6 @@
 
     <section class="panel" aria-labelledby="titulo-formulario">
       <h2 class="oculto" id="titulo-formulario">Datos de la consulta</h2>
-
-      <section class="terminos" aria-labelledby="titulo-terminos">
-        <h2 id="titulo-terminos">Antes de consultar</h2>
-        <p>Esta herramienta transmite las cédulas ingresadas al servicio oficial únicamente para consultar el Carné del Deportista. No crea una base de datos ni conserva las cédulas en el navegador, archivos o logs propios. La respuesta se muestra mientras esta página permanezca abierta. Si descargás un CSV, el archivo queda bajo tu custodia.</p>
-        <p>El delegado del equipo debe consultar solo cuando tenga autorización y una finalidad legítima, informar a las personas involucradas cuando corresponda y proteger cualquier resultado que descargue. La aceptación de estas condiciones no sustituye el consentimiento o la base legal que corresponda para tratar datos de terceros, ni elimina las obligaciones legales aplicables.</p>
-        <p>La infraestructura de alojamiento y el servicio oficial pueden procesar datos técnicos conforme a sus políticas. La herramienta no registra la aceptación. Consultá la <a href="https://www.impo.com.uy/bases/leyes/18331-2008?verreferencias=norma" target="_blank" rel="noopener">Ley 18.331 de Protección de Datos Personales</a> y la información de la <a href="https://www.gub.uy/unidad-reguladora-control-datos-personales/" target="_blank" rel="noopener">URCDP</a>.</p>
-        <label class="terminos__aceptacion" for="aceptar-terminos">
-          <input id="aceptar-terminos" type="checkbox">
-          <span>Leí y acepto estas condiciones de uso. Confirmo que, como delegado, verificaré la autorización y el propósito de cada consulta, y cuidaré o borraré los archivos que descargue.</span>
-        </label>
-      </section>
 
       <form id="form" novalidate>
         <div class="campo">
@@ -79,10 +82,7 @@
 
     <section id="resultados" class="resultados" aria-live="polite"></section>
 
-    <div class="barra-acciones" id="barra-acciones" hidden>
-      <button type="button" class="boton boton--secundario" id="descargar">Descargar CSV</button>
-      <span class="barra-acciones__nota" id="nota-descarga"></span>
-    </div>
+
 
   </main>
 
@@ -96,8 +96,7 @@
         Privacidad y uso: esta herramienta no crea una base de cédulas ni las guarda en el navegador,
         archivos o logs propios. La cédula se transmite al servicio oficial para consultar y el resultado
         solo permanece visible mientras se usa esta página. El delegado del equipo es responsable de
-        verificar que tiene autorización y un propósito legítimo antes de consultar, y de custodiar o borrar
-        cualquier CSV que decida descargar. El alojamiento y el servicio oficial pueden procesar datos
+        verificar que tiene autorización y un propósito legítimo antes de consultar, y de proteger los datos que consulta. El alojamiento y el servicio oficial pueden procesar datos
         técnicos según sus propias políticas.
         <a href="https://www.impo.com.uy/bases/leyes/18331-2008?verreferencias=norma" target="_blank" rel="noopener">Ley uruguaya de protección de datos personales</a>.
       </p>
@@ -118,6 +117,8 @@
     </div>
   </template>
 
+  </div>
   <script src="/app.js" defer></script>
 </body>
 </html>
+

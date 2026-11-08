@@ -101,8 +101,8 @@ class Manejador(BaseHTTPRequestHandler):
         except ValueError as exc:
             self._responder_json(400, {"error": str(exc)})
             return
-        except Exception as exc:  # noqa: BLE001 - se informa al front
-            self._responder_json(500, {"error": f"Error inesperado: {exc}"})
+        except Exception:  # noqa: BLE001
+            self._responder_json(500, {"error": "No se pudo completar la consulta."})
             return
 
         self._responder_json(200, respuesta)
@@ -151,7 +151,7 @@ class Manejador(BaseHTTPRequestHandler):
         self._responder(codigo, cuerpo, "application/json; charset=utf-8")
 
     def log_message(self, formato: str, *args) -> None:  # noqa: A003
-        sys.stderr.write(f"[web] {self.address_string()} — {formato % args}\n")
+        pass  # No conserva direcciones, rutas ni datos de las consultas.
 
 
 def procesar_consulta(cedulas, dias_aviso, espera: float = 0.4) -> dict:
@@ -269,3 +269,4 @@ def parsear_argumentos(argv: list[str] | None = None) -> argparse.Namespace:
 
 if __name__ == "__main__":
     sys.exit(main())
+
